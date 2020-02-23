@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contexts\NorthwindContext.cs" />
+    <Compile Include="Demonstrations\StaticCodeSamples.cs" />
     <Compile Include="Extensions\CustomerExtensions.cs" />
     <Compile Include="HelperClasses\CustomerLister.cs" />
     <Compile Include="HelperClasses\CustomerHelpers.cs" />

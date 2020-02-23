@@ -15,6 +15,7 @@ namespace NorthWindCoreLibrary.Extensions
         public static async Task<Customer> CustomerPartial(this NorthwindContext context, int customerIdentifier)
         {
             return  await context.Customers
+                .AsNoTracking()
                 .Include(customer => customer.CountryIdentifierNavigation)
                 .Include(customer => customer.Contact)
                 .Include(customer => customer.ContactTypeIdentifierNavigation)
@@ -24,6 +25,7 @@ namespace NorthWindCoreLibrary.Extensions
         public static async Task<List<CustomerLister>> CustomerDisplay(this NorthwindContext context)
         {
             return await context.Customers
+                .AsNoTracking()
                 .Select(customer => new CustomerLister
                 {
                     Name = customer.CompanyName,
