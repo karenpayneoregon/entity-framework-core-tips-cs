@@ -115,6 +115,7 @@ namespace EntityFrameworkCoreExamples
 
             using (var context = new NorthwindContext())
             {
+
                 context.Diagnostics = LogConsoleCheckBox.Checked;
                 var customer = await context.CustomerPartial(customerIdentifier);
 

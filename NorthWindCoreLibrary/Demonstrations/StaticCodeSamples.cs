@@ -64,8 +64,13 @@ namespace NorthWindCoreLibrary.Demonstrations
             }
         }
 
-
-
+        public List<Customer> GetCustomersForListBox()
+        {
+            using (var context = new NorthwindContext())
+            {
+                return context.Customers.ToList();
+            }
+        }
 
     }
 }
