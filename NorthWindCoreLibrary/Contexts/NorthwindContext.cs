@@ -131,6 +131,13 @@ namespace NorthWindCoreLibrary.Contexts
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.SupplierId)
                     .HasConstraintName("FK_Products_Suppliers");
+
+
+                /*
+                 * Uncomment to filter out Discontinued products
+                 */
+                //entity.HasQueryFilter(prod => prod.Discontinued == false);
+
             });
 
             modelBuilder.Entity<Shipper>(entity =>
