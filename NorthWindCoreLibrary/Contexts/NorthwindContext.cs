@@ -39,16 +39,17 @@ namespace NorthWindCoreLibrary.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
+                var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=NorthWindAzureForInserts;Integrated Security=True";
                 if (Diagnostics)
                 {
-                    optionsBuilder.UseSqlServer("Data Source=KARENS-PC;Initial Catalog=NorthWindAzureForInserts;Integrated Security=True")
+                    optionsBuilder.UseSqlServer(connectionString)
                         .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryClientEvaluationWarning)).EnableSensitiveDataLogging();
 
                     optionsBuilder.UseLoggerFactory(LoggerFactory);
                 }
                 else
                 {
-                    optionsBuilder.UseSqlServer("Data Source=KARENS-PC;Initial Catalog=NorthWindAzureForInserts;Integrated Security=True");
+                    optionsBuilder.UseSqlServer(connectionString);
                 }
                 
             }
