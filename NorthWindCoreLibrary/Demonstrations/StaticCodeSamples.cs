@@ -72,5 +72,18 @@ namespace NorthWindCoreLibrary.Demonstrations
             }
         }
 
+        /// <summary>
+        /// Used to get into overrides for SaveChanges in NorthWindContext
+        /// </summary>
+        public void ChangeCustomer1()
+        {
+            using (var context = new NorthwindContext())
+            {
+                var customer = context.Customers.FirstOrDefault();
+                customer.CompanyName = customer.CompanyName + " 1";
+                context.SaveChanges();
+            }
+        }
+
     }
 }

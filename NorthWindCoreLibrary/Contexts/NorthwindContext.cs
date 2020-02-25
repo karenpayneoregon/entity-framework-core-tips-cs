@@ -1,10 +1,16 @@
 ﻿using NorthWindCoreLibrary.Models;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NorthWindCoreLibrary.Contexts
 {
@@ -154,6 +160,102 @@ namespace NorthWindCoreLibrary.Contexts
             });
 
             OnModelCreatingPartial(modelBuilder);
+            
+        }
+        #region SaveChanges overrides
+        /// <summary>
+        /// Override SaveChanges to demonstrate in this
+        /// case having an event to review changes both
+        /// original and current values
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override int SaveChanges()
+        {
+            OnBeforeSaving();
+            return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
+        {
+            OnBeforeSaving();
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = new CancellationToken())
+        {
+            OnBeforeSaving();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Raw example for accessing data prior to performing a save.
+        /// </summary>
+        private void OnBeforeSaving()
+        {
+            var entries = ChangeTracker.Entries();
+
+            /*
+             * Only interested in modified entities
+             */
+            var modifiedEntities = ChangeTracker
+                .Entries().Where(_ =>  _.State == EntityState.Modified);
+
+            /*
+             * Iterate any modified entities
+             */
+            foreach (var change in modifiedEntities)
+            {
+
+                /*
+                 * We are only concerned in this case with customer entities
+                 */
+                if (change.Entity is Customer customer)
+                {
+                    /*
+                     * Show primary key
+                     */
+                    Console.WriteLine($"Primary key: {GetEntityPrimaryKeyValue(change.Entity)}");
+
+                    foreach (var prop in change.Entity.GetType().GetTypeInfo().DeclaredProperties)
+                    {
+                        if (!prop.GetGetMethod().IsVirtual)
+                        {
+                            /*
+                             * Show property name, original and current values
+                             */
+                            Console.WriteLine($"Name: {prop.Name} original '{change.Property(prop.Name).OriginalValue}' current '{change.Property(prop.Name).CurrentValue}'");
+                        }
+                        
+                    }
+                }
+            }
+
+        }
+        /// <summary>
+        /// Obtain a primary key value for an entity
+        /// </summary>
+        /// <typeparam name="T">Entity type in the current context</typeparam>
+        /// <param name="entity">The actual entity</param>
+        /// <returns></returns>
+        protected virtual int GetEntityPrimaryKeyValue<T>(T entity)
+        {
+            var itemType = entity.GetType();
+
+            var keyName = Model.FindEntityType(itemType)
+                .FindPrimaryKey().Properties.Select(x => x.Name).Single();
+
+            var primaryKeyValue = (int)entity.GetType()
+                .GetProperty(keyName)?.GetValue(entity, null);
+
+            if (primaryKeyValue < 0)
+            {
+                return -1;
+            }
+
+            return primaryKeyValue;
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
@@ -163,6 +265,7 @@ namespace NorthWindCoreLibrary.Contexts
         /// https://docs.microsoft.com/en-us/aspnet/core/migration/logging-nonaspnetcore?view=aspnetcore-3.1
         /// </summary>
         public static readonly ILoggerFactory LoggerFactory = new LoggerFactory().AddConsole((_, ___) => true);
+
     }
 
 }

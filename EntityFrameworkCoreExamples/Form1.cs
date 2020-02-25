@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.EntityFrameworkCore;
 using NorthWindCoreLibrary.Contexts;
+using NorthWindCoreLibrary.Demonstrations;
 using NorthWindCoreLibrary.Extensions;
 using NorthWindCoreLibrary.HelperClasses;
 
@@ -84,7 +85,8 @@ namespace EntityFrameworkCoreExamples
         /// <param name="e"></param>
         private async void IncludeStatementsConventionalButton_Click(object sender, EventArgs e)
         {
-
+            var ops = new StaticCodeSamples();
+            ops.ChangeCustomer1();
             var customerIdentifier = ((CustomerLister)CustomerListBox.SelectedItem).Id;
 
             using (var context = new NorthwindContext())
