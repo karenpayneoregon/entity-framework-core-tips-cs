@@ -85,8 +85,7 @@ namespace EntityFrameworkCoreExamples
         /// <param name="e"></param>
         private async void IncludeStatementsConventionalButton_Click(object sender, EventArgs e)
         {
-            var ops = new StaticCodeSamples();
-            ops.ChangeCustomer1();
+
             var customerIdentifier = ((CustomerLister)CustomerListBox.SelectedItem).Id;
 
             using (var context = new NorthwindContext())
