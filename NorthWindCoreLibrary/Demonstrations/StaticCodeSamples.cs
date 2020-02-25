@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NorthWindCoreLibrary.Contexts;
+using NorthWindCoreLibrary.Extensions;
 using NorthWindCoreLibrary.Models;
 
 namespace NorthWindCoreLibrary.Demonstrations
@@ -75,13 +76,13 @@ namespace NorthWindCoreLibrary.Demonstrations
         /// <summary>
         /// Used to get into overrides for SaveChanges in NorthWindContext
         /// </summary>
-        public void ChangeCustomer1()
+        public async void ChangeCustomer1()
         {
             using (var context = new NorthwindContext())
             {
                 var customer = context.Customers.FirstOrDefault();
-                customer.CompanyName = customer.CompanyName + " 1";
-                context.SaveChanges();
+                customer.CompanyName = null; 
+                await context.SaveChangesWithValidationAsync();
             }
         }
 

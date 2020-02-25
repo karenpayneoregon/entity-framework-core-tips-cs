@@ -136,6 +136,7 @@
     <Compile Include="Contexts\NorthwindContext.cs" />
     <Compile Include="Demonstrations\StaticCodeSamples.cs" />
     <Compile Include="Extensions\CustomerExtensions.cs" />
+    <Compile Include="Extensions\DbContextExtensions.cs" />
     <Compile Include="HelperClasses\CustomerLister.cs" />
     <Compile Include="HelperClasses\CustomerHelpers.cs" />
     <Compile Include="Models\Category.cs" />

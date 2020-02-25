@@ -175,7 +175,7 @@ namespace NorthWindCoreLibrary.Contexts
             OnBeforeSaving();
             return base.SaveChanges();
         }
-
+        
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             OnBeforeSaving();
@@ -226,7 +226,10 @@ namespace NorthWindCoreLibrary.Contexts
                             /*
                              * Show property name, original and current values
                              */
-                            Console.WriteLine($"Name: {prop.Name} original '{change.Property(prop.Name).OriginalValue}' current '{change.Property(prop.Name).CurrentValue}'");
+                            Console.WriteLine(
+                                $"Name: {prop.Name} original " + 
+                                $"'{change.Property(prop.Name).OriginalValue}' " + 
+                                $"current '{change.Property(prop.Name).CurrentValue}'");
                         }
                         
                     }
