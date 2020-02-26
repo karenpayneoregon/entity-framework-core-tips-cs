@@ -45,7 +45,12 @@ namespace NorthWindCoreLibrary.Contexts
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=NorthWindAzureForInserts;Integrated Security=True";
+
+                
+                var serverName = Environment.UserName == "Karens" ? "KARENS-PC" : ".\\SQLEXPRESS";
+
+                var connectionString = $"Data Source={serverName};Initial Catalog=NorthWindAzureForInserts;Integrated Security=True";
+
                 if (Diagnostics)
                 {
                     optionsBuilder.UseSqlServer(connectionString)
@@ -219,17 +224,17 @@ namespace NorthWindCoreLibrary.Contexts
                      */
                     Console.WriteLine($"Primary key: {GetEntityPrimaryKeyValue(change.Entity)}");
 
-                    foreach (var prop in change.Entity.GetType().GetTypeInfo().DeclaredProperties)
+                    foreach (var propInfo in change.Entity.GetType().GetTypeInfo().DeclaredProperties)
                     {
-                        if (!prop.GetGetMethod().IsVirtual)
+                        if (!propInfo.GetGetMethod().IsVirtual)
                         {
                             /*
                              * Show property name, original and current values
                              */
                             Console.WriteLine(
-                                $"Name: {prop.Name} original " + 
-                                $"'{change.Property(prop.Name).OriginalValue}' " + 
-                                $"current '{change.Property(prop.Name).CurrentValue}'");
+                                $"Name: {propInfo.Name} original " + 
+                                $"'{change.Property(propInfo.Name).OriginalValue}' " + 
+                                $"current '{change.Property(propInfo.Name).CurrentValue}'");
                         }
                         
                     }
